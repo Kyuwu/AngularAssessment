@@ -1,0 +1,47 @@
+@import "css/defaults";
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: var(--light-grey);
+  color: var(--dark-grey);
+
+  display: grid;
+  place-content: center;
+  height: 100%;
+}
+
+main {
+  max-width: 1200px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.button {
+  display: inline-block;
+  background-color: var(--pink);
+  padding-block: 0.75em;
+  padding-inline: 1em;
+  margin-block: 0.5em;
+  text-decoration: none;
+  color: white;
+  border-radius: var(--border-radius);
+  transition: background-color 150ms ease-in-out;
+}
+
+.button:hover {
+  background-color: color-mix(in srgb, var(--pink) 80%, white);
+}
+
+.playlists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}

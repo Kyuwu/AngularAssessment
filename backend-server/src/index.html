@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programmers test</title>
+
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <main></main>
+    <template id="template" type="x-tmpl-mustache">
+      <!--
+          {{ name }} is mustache template-syntax.
+          It replaces 'name' with the name from our templateData in index.ts
+        -->
+      <h1>Hello {{ name }}!</h1>
+      <p>Welcome to the RiskChallenger programmers test!</p>
+      <p>
+        Please have a look at our
+        <code>README</code>
+        for more information. If you have any questions or run into problems,
+        let us know! We're here to help, because that's what potentially future
+        colleagues are for ;-)
+      </p>
+      <h3>Sample categories</h3>
+      <div class="categories">
+        <!--
+            {{ #categories }} is mustache template-syntax
+            It loops over the items in our categories array from templateData
+            In it we can use {{ property }} to display the properties of each category-object
+            Such as {{ id }} and {{ name }} in this example.
+            It ends with {{/categories}}
+          -->
+        {{#categories}}
+        <a class="button" href="categories?id={{id}}">Go to '{{name}}'</a>
+        {{/categories}}
+      </div>
+      <h3>Good luck!</h3>
+
+      <p>
+        If you are ready, time to overwrite this file; you'll need it to
+        implement the first assignment.
+      </p>
+
+      <p>Here's an example checkbox, you'll need it later ;-)</p>
+      <p>
+        <label class="checkbox">
+          Example checkbox
+          <input type="checkbox" checked />
+          <span class="checkmark"></span>
+        </label>
+      </p>
+    </template>
+
+    <script src="index.ts" type="module"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@ import { CategoryService } from '../services/category.service';
 import Category from '../models/category';
 import { MatSidenav } from '@angular/material/sidenav';
 import { FormControl } from '@angular/forms';
-import { Observable, startWith, map } from 'rxjs';
+import { startWith } from 'rxjs';
 
 @Component({
   selector: 'app-category-list',
@@ -12,35 +12,46 @@ import { Observable, startWith, map } from 'rxjs';
   styleUrl: './category-list.component.scss'
 })
 export class CategoryListComponent implements OnInit {
-  categories: Category[] = [];
-  filteredCategories: Category[] = [];
-  selectedCategory: Category | null = null; 
-  searchControl = new FormControl('');
-
+  categories: Category[] = []; // List of all available categories
+  filteredCategories: Category[] = []; // Categories filtered by search input
+  selectedCategory: Category | null = null; // Currently selected category
+  searchControl = new FormControl(''); // Search input control
+  
   constructor(private categoryService: CategoryService) {}
-
+  
   ngOnInit(): void {
+    // Fetch categories from the service and format descriptions
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         this.categories = data.map(category => ({
           ...category,
-          description: this.capitalizeEveryWord(category.description.toLocaleLowerCase())
+          description: this.capitalizeEveryWord(category.description.toLocaleLowerCase()),
         }));
-        this.filteredCategories = this.categories;
+        this.filteredCategories = this.categories; // Initialize filtered categories
       },
       error: (err) => console.error('Error fetching categories', err),
     });
-
+  
+    // Listen for search input changes and filter categories accordingly
     this.searchControl.valueChanges
       .pipe(startWith(''))
       .subscribe(value => this.filterCategories(value || ''));
   }
-
-  openSidenav(category: any, sidenav: MatSidenav): void {
+  
+  /**
+   * Opens the side navigation with the selected category.
+   * @param category - The category to display in the sidenav.
+   * @param sidenav - The MatSidenav instance to open.
+   */
+  openSidenav(category: Category, sidenav: MatSidenav): void {
     this.selectedCategory = category;
     sidenav.open();
   }
   
+  /**
+   * Filters the category list based on the search query.
+   * @param query - The search input string.
+   */
   filterCategories(query: string): void {
     const lowerCaseQuery = query.toLowerCase();
     this.filteredCategories = this.categories.filter(category =>
@@ -48,7 +59,12 @@ export class CategoryListComponent implements OnInit {
       category.description.toLowerCase().includes(lowerCaseQuery)
     );
   }
-
+  
+  /**
+   * Capitalizes the first letter of every word in a string.
+   * @param val - The string to format.
+   * @returns The formatted string with each word capitalized.
+   */
   capitalizeEveryWord(val: string): string {
     return val
       .split(' ')

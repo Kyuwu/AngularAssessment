@@ -1,8 +1,14 @@
 <div class="wrapper">
   <h1>{{category.name}}</h1>
   <h2>Total duration: {{totalDuration}}</h2>
+  <section class="example-section">
+    <mat-checkbox *ngFor="let rating of ratings" class="example-margin" [checked]="selectedRatings.includes(rating)"
+      (change)="toggleRatingSelection(rating)">
+      {{ rating }}
+    </mat-checkbox>
+  </section>
   <mat-grid-list cols="5" rowHeight="250px" gutterSize="16px">
-    <mat-grid-tile *ngFor="let film of films; index as i">
+    <mat-grid-tile *ngFor="let film of filteredFilms; index as i">
       <app-films-list-card [film]="film" [index]="i+1"></app-films-list-card>
     </mat-grid-tile>
   </mat-grid-list>

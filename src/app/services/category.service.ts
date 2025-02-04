@@ -8,15 +8,25 @@ import Film from '../models/film';
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:8080/categories';
+  private apiUrl = 'http://localhost:8080/categories'; // Base API URL for categories
 
   constructor(private http: HttpClient) {}
-
+  
+  /**
+   * Fetches the list of all categories from the API.
+   * @returns An observable containing an array of categories.
+   */
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.apiUrl);
   }
-
+  
+  /**
+   * Fetches the list of films for a specific category from the API.
+   * @param categoryId - The ID of the category to retrieve films for.
+   * @returns An observable containing an array of films.
+   */
   getFilmsByCategory(categoryId: number): Observable<Film[]> {
     return this.http.get<Film[]>(`${this.apiUrl}/${categoryId}/films`);
   }
+  
 }

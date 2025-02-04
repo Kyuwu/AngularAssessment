@@ -10,44 +10,76 @@ import Film from '../models/film';
   styleUrls: ['./films-list.component.scss']
 })
 export class FilmsListComponent implements OnInit, OnChanges {
-  @Input() category!: Category;
-  films: Film[] = [];
-  totalDuration: string = '';
+  @Input() category!: Category; // Selected category of films
+  films: Film[] = []; // All films in the selected category
+  filteredFilms: Film[] = []; // Films filtered by selected ratings
+  ratings: string[] = ['G', 'PG-13', 'R', 'NC-17']; // Available rating options
+  selectedRatings: string[] = []; // Currently selected ratings for filtering
+
+  totalDuration: string = ''; // Total duration of filtered films in HH:MM format
 
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
-    this.loadFilms();
+    this.loadFilms(); // Load films when the component initializes
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    // Reload films if the category changes
     if (changes['category']) {
       console.log('Category changed:', changes['category'].currentValue);
       this.loadFilms();
     }
   }
 
+  /**
+   * Fetches films based on the selected category and applies initial filtering.
+   */
   private loadFilms(): void {
     if (this.category) {
       this.categoryService.getFilmsByCategory(this.category.category_id).subscribe({
         next: (data) => {
-          this.films = data.map(film => ({
-            ...film,
-          }));
-          this.calculateTotalDuration(); // Call the method to calculate the total duration
+          this.films = data;
+          this.filterFilmsByRating(); // Apply filtering after fetching films
         },
         error: (err) => console.error('Error fetching films', err),
       });
     }
   }
 
-  // Method to calculate total duration of films
-  private calculateTotalDuration(): void {
-    const totalMinutes = this.films.reduce((sum, film) => sum + film.duration, 0); // Assuming `film.duration` is in minutes
+  /**
+   * Toggles the selection of a rating and updates the filtered film list.
+   * @param rating - The rating to toggle.
+   */
+  toggleRatingSelection(rating: string): void {
+    const index = this.selectedRatings.indexOf(rating);
+    if (index > -1) {
+      this.selectedRatings.splice(index, 1); // Remove if already selected
+    } else {
+      this.selectedRatings.push(rating); // Add if not selected
+    }
+    this.filterFilmsByRating();
+  }
 
+  /**
+   * Filters the films based on selected ratings and updates total duration.
+   */
+  filterFilmsByRating(): void {
+    if (this.selectedRatings.length > 0) {
+      this.filteredFilms = this.films.filter(film => this.selectedRatings.includes(film.rating));
+    } else {
+      this.filteredFilms = [...this.films]; // Show all films if no rating is selected
+    }
+    this.calculateTotalDuration();
+  }
+
+  /**
+   * Calculates the total duration of the filtered films and formats it as HH:MM.
+   */
+  private calculateTotalDuration(): void {
+    const totalMinutes = this.filteredFilms.reduce((sum, film) => sum + film.duration, 0);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-
-    this.totalDuration = `${hours} hours ${minutes} minutes`;
+    this.totalDuration = `${hours}h ${minutes}m`;
   }
 }

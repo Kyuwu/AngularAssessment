@@ -5,7 +5,6 @@ import { CategoryListComponent } from './category-list/category-list.component';
 const routes: Routes = [
   { path: '', redirectTo: 'categories', pathMatch: 'full' },
   { path: 'categories', component: CategoryListComponent },
-  // { path: 'categories/:id/films', component: CategoryFilmsComponent }
 ];
 
 @NgModule({

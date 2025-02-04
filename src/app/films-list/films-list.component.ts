@@ -48,6 +48,6 @@ export class FilmsListComponent implements OnInit, OnChanges {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
 
-    this.totalDuration = `${hours} hour(s) ${minutes} minute(s)`;
+    this.totalDuration = `${hours} hours ${minutes} minutes`;
   }
 }

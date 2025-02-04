@@ -9,6 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { AngularMaterialModule } from './angular-mat.module';
 import { FilmsListComponent } from './films-list/films-list.component';
 import { FilmsListCardComponent } from './films-list/films-list-card/films-list-card.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { FilmsListCardComponent } from './films-list/films-list-card/films-list-
   ],
   imports: [
     AngularMaterialModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
   ],

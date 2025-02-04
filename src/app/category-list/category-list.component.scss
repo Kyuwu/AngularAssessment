@@ -11,11 +11,18 @@
   justify-content: space-between;
 }
 
+.search-field {
+  max-width: 20vw;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .category-title {
   font-weight: bold;
   margin-right: 20px;
   white-space: nowrap;
-
   flex-grow: 1;
 }
 
@@ -26,10 +33,12 @@
   white-space: nowrap;
   text-align: left;
 }
-.wrapper {
+
+.content-wrapper {
   max-width: 70vw;
   margin: 0 auto;
 }
+
 .custom-sidenav {
   width: 100%;
   height: 60vh;
@@ -37,6 +46,30 @@
   align-self: self-end;
 }
 
-.mat-sidenav{
+.mat-sidenav {
   transition-duration: 0s !important;
+  position: fixed;
+}
+
+mat-card {
+  margin-top: 16px !important;
+}
+
+.sidenav-container {
+  background-color: rgb(238, 238, 238);
+}
+
+button {
+  position: fixed;
+  right: 0;
+  margin: 16px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.search-field mat-form-field {
+  width: 50%;
+  max-width: 400px;
 }

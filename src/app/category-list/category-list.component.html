@@ -1,17 +1,26 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav mode="over" position="start" class="custom-sidenav">
-    <button mat-button (click)="sidenav.close()">Close</button>
-    <app-films-list *ngIf="selectedCategory" [category]="selectedCategory"></app-films-list>
-  </mat-sidenav>
+<div class="wrapper">
+  <h1>Programmers Test</h1>
+  <mat-form-field appearance="outline" class="search-field content-wrapper">
+    <mat-label>Search categories</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Type to search..." />
+  </mat-form-field>
 
-  <mat-sidenav-content>
-    <ng-container *ngFor="let category of categories">
-      <mat-card class="category-card wrapper" (click)="openSidenav(category, sidenav)">
-        <mat-card-content class="category-content">
-          <span class="category-title">{{ category.name }}</span>
-          <span class="category-description">{{ category.description }}</span>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  <mat-sidenav-container class="sidenav-container">
+  
+    <mat-sidenav #sidenav mode="over" position="start" class="custom-sidenav">
+      <button mat-flat-button (click)="sidenav.close()">Close</button>
+      <app-films-list *ngIf="selectedCategory" [category]="selectedCategory"></app-films-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <ng-container *ngFor="let category of filteredCategories">
+        <mat-card class="category-card content-wrapper" (click)="openSidenav(category, sidenav)">
+          <mat-card-content class="category-content">
+            <span class="category-title">{{ category.name }}</span>
+            <span class="category-description">{{ category.description }}</span>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>  
+</div>

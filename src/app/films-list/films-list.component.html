@@ -1,0 +1,9 @@
+<div class="wrapper">
+  <h1>{{category.name}}</h1>
+  <h2>{{totalDuration}}</h2>
+  <mat-grid-list cols="5" rowHeight="250px" gutterSize="16px">
+    <mat-grid-tile *ngFor="let film of films; index as i">
+      <app-films-list-card [film]="film" [index]="i+1"></app-films-list-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

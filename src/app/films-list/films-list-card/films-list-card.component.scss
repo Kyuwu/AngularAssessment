@@ -1,0 +1,27 @@
+mat-card {
+  position: relative;
+
+  .card-number {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  .card-minutes, .card-rating {
+    position: absolute;
+    bottom: 0;
+    padding: 16px;
+    font-size: 1em;
+  }
+
+  .card-minutes {
+    left: 0;
+  }
+
+  .card-rating {
+    right: 0;
+  }
+}

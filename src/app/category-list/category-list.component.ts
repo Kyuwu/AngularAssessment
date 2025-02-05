@@ -55,7 +55,7 @@ export class CategoryListComponent implements OnInit {
   filterCategories(query: string): void {
     const lowerCaseQuery = query.toLowerCase();
     this.filteredCategories = this.categories.filter(category =>
-      category.name.toLowerCase().includes(lowerCaseQuery)
+      category.name.toLowerCase().startsWith(lowerCaseQuery)
     );
   }
   

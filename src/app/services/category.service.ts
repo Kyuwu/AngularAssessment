@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Category from '../models/category';
 import Film from '../models/film';
-
+import { environment } from '../../environments/environment.development';
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:8080/categories'; // Base API URL for categories
+// Fetches from `http://my-prod-url` in production, `http://my-dev-url` in development.
+  private apiUrl = `${environment.API_URL}`; // Base API URL for categories
 
   constructor(private http: HttpClient) {}
   
@@ -17,7 +18,7 @@ export class CategoryService {
    * @returns An observable containing an array of categories.
    */
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.apiUrl);
+    return this.http.get<Category[]>(`${this.apiUrl}/categories`);
   }
   
   /**
@@ -26,7 +27,7 @@ export class CategoryService {
    * @returns An observable containing an array of films.
    */
   getFilmsByCategory(categoryId: number): Observable<Film[]> {
-    return this.http.get<Film[]>(`${this.apiUrl}/${categoryId}/films`);
+    return this.http.get<Film[]>(`${this.apiUrl}/categories/${categoryId}/films`);
   }
   
 }

@@ -10,12 +10,14 @@ import { AngularMaterialModule } from './angular-mat.module';
 import { FilmsListComponent } from './films-list/films-list.component';
 import { FilmsListCardComponent } from './films-list/films-list-card/films-list-card.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CategoryListCardComponent } from './category-list/category-list-card/category-list-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     //Category
     CategoryListComponent,
+    CategoryListCardComponent,
     //Film
     FilmsListComponent,
     FilmsListCardComponent

@@ -6,21 +6,28 @@
   </mat-form-field>
 
   <mat-sidenav-container class="sidenav-container">
-  
     <mat-sidenav #sidenav mode="over" position="start" class="custom-sidenav">
       <button mat-flat-button (click)="sidenav.close()">Close</button>
       <app-films-list *ngIf="selectedCategory" [category]="selectedCategory"></app-films-list>
     </mat-sidenav>
-  
-    <mat-sidenav-content>
-      <ng-container *ngFor="let category of filteredCategories">
-        <mat-card class="category-card content-wrapper" (click)="openSidenav(category, sidenav)">
-          <mat-card-content class="category-content">
-            <span class="category-title">{{ category.name }}</span>
-            <span class="category-description">{{ category.description }}</span>
-          </mat-card-content>
-        </mat-card>
-      </ng-container>
-    </mat-sidenav-content>
-  </mat-sidenav-container>  
+
+    <ng-container *ngIf="filteredCategories.length > 0; else empty">
+      <mat-sidenav-content class="content-wrapper">
+        <ng-container *ngFor="let category of filteredCategories">
+          <app-category-list-card 
+            [category]="category" 
+            (click)="openSidenav(category, sidenav)">
+          </app-category-list-card>
+        </ng-container>
+      </mat-sidenav-content>
+    </ng-container>
+
+  </mat-sidenav-container>
+
+  <ng-template #empty>
+    <div class="content-wrapper">
+      <h3>No categories found...</h3  >
+    </div>
+  </ng-template>
+
 </div>

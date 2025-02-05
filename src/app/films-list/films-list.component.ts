@@ -80,6 +80,13 @@ export class FilmsListComponent implements OnInit, OnChanges {
     const totalMinutes = this.filteredFilms.reduce((sum, film) => sum + film.duration, 0);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    this.totalDuration = `${hours}h ${minutes}m`;
+    this.totalDuration = `${hours} hours ${minutes} minutes`;
+  }
+
+  /**
+   * Logic for adding a film. Would be nice with a dialog popup or something in that direction.
+   */
+  addFilm(){
+    // Open dialog logic
   }
 }

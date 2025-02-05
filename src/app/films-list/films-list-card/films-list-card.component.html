@@ -1,18 +1,14 @@
 <mat-card matRipple appearance="outlined">
-  <mat-card-header>
-    <div class="card-number">#{{index}}</div>
-    <mat-card-title>{{film.title}}</mat-card-title>
-    <mat-card-subtitle>{{film.release_year}}</mat-card-subtitle>
-  </mat-card-header>
+  <div class="card-index">#{{index}}</div>
+  
+  <mat-card-title>{{film.title}}</mat-card-title>
+
   <mat-card-content>
-      {{film.description}}
+    {{film.description}}
   </mat-card-content>
+
   <mat-card-actions>
-    <div class="card-minutes">
-      {{film.duration}} min
-    </div>
-    <div class="card-rating">
-      {{film.rating}}
-    </div>
+    <div class="card-minutes">{{film.duration}} min</div>
+    <div class="card-rating-bottom">{{film.rating}}</div>
   </mat-card-actions>
 </mat-card>

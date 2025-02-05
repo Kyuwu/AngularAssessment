@@ -7,9 +7,16 @@
       {{ rating }}
     </mat-checkbox>
   </section>
+
   <mat-grid-list cols="5" rowHeight="250px" gutterSize="16px">
+    <mat-grid-tile>
+      <button class="add-button full-height" (click)="addFilm()" mat-flat-button color="primary">
+        Add film
+        <mat-icon class="big-icon">add</mat-icon>
+      </button>
+    </mat-grid-tile>
     <mat-grid-tile *ngFor="let film of filteredFilms; index as i">
-      <app-films-list-card [film]="film" [index]="i+1"></app-films-list-card>
+      <app-films-list-card class="full-height" [film]="film" [index]="i+1"></app-films-list-card>
     </mat-grid-tile>
   </mat-grid-list>
 </div>

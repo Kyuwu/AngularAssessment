@@ -3,7 +3,7 @@ describe('CategoryService API Tests', () => {
   const apiUrl = 'http://localhost:8080';
 
   beforeEach(() => {
-    // Optionally, reset or mock something before each test
+    
   });
 
   it('should fetch a list of categories', () => {
@@ -22,13 +22,13 @@ describe('CategoryService API Tests', () => {
       ]
     }).as('getCategories');
 
-    cy.visit('/categories'); // Adjust route as needed
+    cy.visit('/categories');
 
     cy.wait('@getCategories');
   });
 
   it('should fetch films by category ID', () => {
-    const categoryId = 1; // Example category ID
+    const categoryId = 1;
     cy.intercept('GET', `${apiUrl}/categories/${categoryId}/films`, {
       statusCode: 200,
       body: [{

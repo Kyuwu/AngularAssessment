@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core'; 
 import Category from '../models/category';
 import { CategoryService } from '../services/category.service';
 import Film from '../models/film';
@@ -13,7 +13,7 @@ export class FilmsListComponent implements OnInit, OnChanges {
   @Input() category!: Category; // Selected category of films
   films: Film[] = []; // All films in the selected category
   filteredFilms: Film[] = []; // Films filtered by selected ratings
-  ratings: string[] = ['G', 'PG-13', 'R', 'NC-17']; // Available rating options
+  ratings: string[] = []; // Dynamically set available rating options
   selectedRatings: string[] = []; // Currently selected ratings for filtering
 
   totalDuration: string = ''; // Total duration of filtered films in HH:MM format
@@ -33,18 +33,27 @@ export class FilmsListComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Fetches films based on the selected category and applies initial filtering.
+   * Fetches films based on the selected category and updates available ratings.
    */
   private loadFilms(): void {
     if (this.category) {
       this.categoryService.getFilmsByCategory(this.category.category_id).subscribe({
         next: (data) => {
           this.films = data;
+          this.extractRatings(); // Extract unique ratings from fetched films
           this.filterFilmsByRating(); // Apply filtering after fetching films
         },
         error: (err) => console.error('Error fetching films', err),
       });
     }
+  }
+
+  /**
+   * Extracts unique ratings from the films and updates the ratings array.
+   */
+  private extractRatings(): void {
+    const uniqueRatings = new Set(this.films.map(film => film.rating));
+    this.ratings = Array.from(uniqueRatings); // Convert set to array
   }
 
   /**

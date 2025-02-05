@@ -8,7 +8,6 @@ import { environment } from '../../environments/environment.development';
   providedIn: 'root'
 })
 export class CategoryService {
-// Fetches from `http://my-prod-url` in production, `http://my-dev-url` in development.
   private apiUrl = `${environment.API_URL}`; // Base API URL for categories
 
   constructor(private http: HttpClient) {}

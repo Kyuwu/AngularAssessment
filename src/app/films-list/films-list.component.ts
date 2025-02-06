@@ -79,7 +79,7 @@ export class FilmsListComponent implements OnInit, OnChanges {
     } else {
       this.filteredFilms = [...this.films]; // Show all films if no rating is selected
     }
-    this.calculateTotalDuration();
+    this.calculateTotalDuration(); // Recalculate 
   }
 
   /**

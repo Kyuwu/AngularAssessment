@@ -1,4 +1,6 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core'; 
+import { Component, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import Category from '../models/category';
 import { CategoryService } from '../services/category.service';
 import Film from '../models/film';
@@ -9,7 +11,7 @@ import Film from '../models/film';
   templateUrl: './films-list.component.html',
   styleUrls: ['./films-list.component.scss']
 })
-export class FilmsListComponent implements OnInit, OnChanges {
+export class FilmsListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() category!: Category; // Selected category of films
   films: Film[] = []; // All films in the selected category
   filteredFilms: Film[] = []; // Films filtered by selected ratings
@@ -17,6 +19,8 @@ export class FilmsListComponent implements OnInit, OnChanges {
   selectedRatings: string[] = []; // Currently selected ratings for filtering
 
   totalDuration: string = ''; // Total duration of filtered films in HH:MM format
+
+  private destroy$ = new Subject<void>(); // Tracks component lifecycle for cleanup
 
   constructor(private categoryService: CategoryService) {}
 
@@ -32,19 +36,28 @@ export class FilmsListComponent implements OnInit, OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    // Ensure all subscriptions are cleaned up when the component is destroyed
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   /**
    * Fetches films based on the selected category and updates available ratings.
+   * Uses takeUntil to automatically unsubscribe when the component is destroyed.
    */
   private loadFilms(): void {
     if (this.category) {
-      this.categoryService.getFilmsByCategory(this.category.category_id).subscribe({
-        next: (data) => {
-          this.films = data;
-          this.extractRatings(); // Extract unique ratings from fetched films
-          this.filterFilmsByRating(); // Apply filtering after fetching films
-        },
-        error: (err) => console.error('Error fetching films', err),
-      });
+      this.categoryService.getFilmsByCategory(this.category.category_id)
+        .pipe(takeUntil(this.destroy$)) // Unsubscribe when component is destroyed
+        .subscribe({
+          next: (data) => {
+            this.films = data;
+            this.extractRatings(); // Extract unique ratings from fetched films
+            this.filterFilmsByRating(); // Apply filtering after fetching films
+          },
+          error: (err) => console.error('Error fetching films', err),
+        });
     }
   }
 
@@ -79,7 +92,7 @@ export class FilmsListComponent implements OnInit, OnChanges {
     } else {
       this.filteredFilms = [...this.films]; // Show all films if no rating is selected
     }
-    this.calculateTotalDuration(); // Recalculate 
+    this.calculateTotalDuration(); // Recalculate total duration
   }
 
   /**

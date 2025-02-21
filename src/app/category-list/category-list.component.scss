@@ -11,19 +11,43 @@
   margin: 0 auto;
 }
 
-.custom-sidenav {
-  width: 100%;
-  height: 60vh;
-  border-radius: 0;
-  align-self: self-end;
+/* ... other CSS ... */
+
+.category-details-popup {
+  position: fixed; /* Fixed positioning */
+  bottom: 0; /* Position at the bottom */
+  left: 0;
+  width: 100%; /* Full width */
+  background-color: white; /* Or any color you prefer */
+  border-top: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+  z-index: 1000; /* Ensure it's on top of other content */
+  /* Add any other styling you want for the popup */
+  max-height: 50vh; /* Limit the maximum height */
+  overflow-y: auto; /* Add scroll if content overflows */
 }
 
-.mat-sidenav {
-  transition-duration: 0s !important;
-  position: fixed;
-  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+.close-popup-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
+.popup-content {
+    /* Style the content within the popup */
+}
+
+/* Optional: Add a backdrop behind the popup if you want */
+.popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Below the popup but above other content */
+}
 button {
   position: fixed;
   right: 0;

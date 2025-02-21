@@ -1,14 +1,14 @@
 <mat-card matRipple appearance="outlined">
-  <div class="card-index">#{{index}}</div>
+  <div class="card-index">#{{index()}}</div>
   
-  <mat-card-title>{{film.title}}</mat-card-title>
+  <mat-card-title>{{film().title}}</mat-card-title>
 
   <mat-card-content>
-    {{film.description}}
+    {{film().description}}
   </mat-card-content>
 
   <mat-card-actions>
-    <div class="card-minutes">{{film.duration}} min</div>
-    <div class="card-rating-bottom">{{film.rating}}</div>
+    <div class="card-minutes">{{film().duration}} min</div>
+    <div class="card-rating-bottom">{{film().rating}}</div>
   </mat-card-actions>
 </mat-card>

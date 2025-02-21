@@ -1,101 +1,94 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core'; 
-import Category from '../models/category';
+import { Component, computed, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatGridListModule, MatGridTile } from '@angular/material/grid-list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { CategoryService } from '../services/category.service';
+import Category from '../models/category';
 import Film from '../models/film';
+import { input } from '@angular/core';
+import { FilmsListCardComponent } from './films-list-card/films-list-card.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-films-list',
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCheckboxModule,
+    MatGridListModule,
+    MatButtonModule,
+    MatIconModule,
+    FilmsListCardComponent,
+    MatInputModule
+  ],
   templateUrl: './films-list.component.html',
   styleUrls: ['./films-list.component.scss']
 })
-export class FilmsListComponent implements OnInit, OnChanges {
-  @Input() category!: Category; // Selected category of films
-  films: Film[] = []; // All films in the selected category
-  filteredFilms: Film[] = []; // Films filtered by selected ratings
-  ratings: string[] = []; // Dynamically set available rating options
-  selectedRatings: string[] = []; // Currently selected ratings for filtering
+export class FilmsListComponent {
+  readonly category = input.required<Category>(); // Selected category of films
 
-  totalDuration: string = ''; // Total duration of filtered films in HH:MM format
+  private categoryService = inject(CategoryService);
+  
+  films = signal<Film[]>([]); // All films in the selected category
+  selectedRatings = signal<string[]>([]); // Selected ratings for filtering
 
-  constructor(private categoryService: CategoryService) {}
+  ratings = computed(() => {
+    return Array.from(new Set(this.films().map(film => film.rating))); // Extract unique ratings
+  });
 
-  ngOnInit(): void {
-    this.loadFilms(); // Load films when the component initializes
+  filteredFilms = computed(() => {
+    const selected = this.selectedRatings();
+    return selected.length > 0
+      ? this.films().filter(film => selected.includes(film.rating))
+      : this.films();
+  });
+
+  totalDuration = computed(() => {
+    const totalMinutes = this.filteredFilms().reduce((sum, film) => sum + film.duration, 0);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours} hours ${minutes} minutes`;
+  });
+
+  ngOnInit() {
+    this.loadFilms(); // Load films initially
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // Reload films if the category changes
-    if (changes['category']) {
-      console.log('Category changed:', changes['category'].currentValue);
-      this.loadFilms();
-    }
+  ngOnChanges(): void {
+    this.loadFilms(); // Reload films when category changes
   }
 
   /**
-   * Fetches films based on the selected category and updates available ratings.
+   * Fetches films based on the selected category.
    */
   private loadFilms(): void {
-    if (this.category) {
-      this.categoryService.getFilmsByCategory(this.category.category_id).subscribe({
-        next: (data) => {
-          this.films = data;
-          this.extractRatings(); // Extract unique ratings from fetched films
-          this.filterFilmsByRating(); // Apply filtering after fetching films
-        },
+    console.log("id? "+this.category());
+    if (this.category()) {
+      this.categoryService.getFilmsByCategory(this.category().category_id).subscribe({
+        next: (data) => this.films.set(data),
         error: (err) => console.error('Error fetching films', err),
       });
     }
   }
 
   /**
-   * Extracts unique ratings from the films and updates the ratings array.
-   */
-  private extractRatings(): void {
-    const uniqueRatings = new Set(this.films.map(film => film.rating));
-    this.ratings = Array.from(uniqueRatings); // Convert set to array
-  }
-
-  /**
-   * Toggles the selection of a rating and updates the filtered film list.
-   * @param rating - The rating to toggle.
+   * Toggles the selection of a rating.
    */
   toggleRatingSelection(rating: string): void {
-    const index = this.selectedRatings.indexOf(rating);
-    if (index > -1) {
-      this.selectedRatings.splice(index, 1); // Remove if already selected
-    } else {
-      this.selectedRatings.push(rating); // Add if not selected
-    }
-    this.filterFilmsByRating();
+    const updatedSelection = this.selectedRatings().includes(rating)
+      ? this.selectedRatings().filter(r => r !== rating)
+      : [...this.selectedRatings(), rating];
+
+    this.selectedRatings.set(updatedSelection);
   }
 
   /**
-   * Filters the films based on selected ratings and updates total duration.
+   * Logic for adding a film. Placeholder for a dialog popup.
    */
-  filterFilmsByRating(): void {
-    if (this.selectedRatings.length > 0) {
-      this.filteredFilms = this.films.filter(film => this.selectedRatings.includes(film.rating));
-    } else {
-      this.filteredFilms = [...this.films]; // Show all films if no rating is selected
-    }
-    this.calculateTotalDuration(); // Recalculate 
-  }
-
-  /**
-   * Calculates the total duration of the filtered films and formats it as HH:MM.
-   */
-  private calculateTotalDuration(): void {
-    const totalMinutes = this.filteredFilms.reduce((sum, film) => sum + film.duration, 0);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    this.totalDuration = `${hours} hours ${minutes} minutes`;
-  }
-
-  /**
-   * Logic for adding a film. Would be nice with a dialog popup or something in that direction.
-   */
-  addFilm(){
-    // Open dialog logic
+  addFilm() {
+    console.log('Add film button clicked');
   }
 }

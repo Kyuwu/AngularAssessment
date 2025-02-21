@@ -4,27 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { CategoryListComponent } from './category-list/category-list.component';
 import { provideHttpClient } from '@angular/common/http';
-import { AngularMaterialModule } from './angular-mat.module';
-import { FilmsListComponent } from './films-list/films-list.component';
-import { FilmsListCardComponent } from './films-list/films-list-card/films-list-card.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CategoryListCardComponent } from './category-list/category-list-card/category-list-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    //Category
-    CategoryListComponent,
-    CategoryListCardComponent,
-    //Film
-    FilmsListComponent,
-    FilmsListCardComponent
   ],
   imports: [
-    AngularMaterialModule,
-    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
   ],

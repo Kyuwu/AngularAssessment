@@ -1,14 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 import Film from '../../models/film';
 
 @Component({
   selector: 'app-films-list-card',
-  standalone: false,
-  
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+  ],
   templateUrl: './films-list-card.component.html',
-  styleUrl: './films-list-card.component.scss'
+  styleUrls: ['./films-list-card.component.scss'] // Fixed typo
 })
 export class FilmsListCardComponent {
-  @Input() film!: Film;
-  @Input() index!: number;
+  readonly film = input.required<Film>();
+  readonly index = input.required<number>();
 }

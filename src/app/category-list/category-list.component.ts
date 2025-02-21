@@ -1,69 +1,84 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CategoryService } from '../services/category.service';
 import Category from '../models/category';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { startWith, Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FilmsListComponent } from '../films-list/films-list.component';
+import { CategoryListCardComponent } from './category-list-card/category-list-card.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatSidenav } from '@angular/material/sidenav';
-import { FormControl } from '@angular/forms';
-import { startWith } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-category-list',
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSidenavModule,
+    ReactiveFormsModule,
+    FilmsListComponent,
+    CategoryListCardComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIcon,
+    MatButtonModule
+  ],
   templateUrl: './category-list.component.html',
-  styleUrl: './category-list.component.scss'
+  styleUrls: ['./category-list.component.scss']
 })
-export class CategoryListComponent implements OnInit {
-  categories: Category[] = []; // List of all available categories
-  filteredCategories: Category[] = []; // Categories filtered by search input
-  selectedCategory: Category | null = null; // Currently selected category
-  searchControl = new FormControl(''); // Search input control
-  
+export class CategoryListComponent implements OnInit, OnDestroy {
+  categories = signal<Category[]>([]);
+  filteredCategories = signal<Category[]>([]);
+  selectedCategory: Category | null = null;
+  searchControl = new FormControl('');
+  private destroy$ = new Subject<void>();
+
   constructor(private categoryService: CategoryService) {}
-  
+
   ngOnInit(): void {
-    // Fetch categories from the service and format descriptions
-    this.categoryService.getCategories().subscribe({
+    this.categoryService.getCategories().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
-        this.categories = data.map(category => ({
+        const formattedCategories = data.map(category => ({
           ...category,
-          description: this.capitalizeEveryWord(category.description.toLocaleLowerCase()),
+          description: this.capitalizeEveryWord(category.description.toLowerCase()),
         }));
-        this.filteredCategories = this.categories; // Initialize filtered categories
+        this.categories.set(formattedCategories);
+        this.filteredCategories.set(formattedCategories);
       },
       error: (err) => console.error('Error fetching categories', err),
     });
-  
-    // Listen for search input changes and filter categories accordingly
+
     this.searchControl.valueChanges
-      .pipe(startWith(''))
+      .pipe(startWith(''), takeUntil(this.destroy$))
       .subscribe(value => this.filterCategories(value || ''));
   }
-  
-  /**
-   * Opens the side navigation with the selected category.
-   * @param category - The category to display in the sidenav.
-   * @param sidenav - The MatSidenav instance to open.
-   */
-  openSidenav(category: Category, sidenav: MatSidenav): void {
-    this.selectedCategory = category;
-    sidenav.open();
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
-  
-  /**
-   * Filters the category list based on the search query.
-   * @param query - The search input string.
-   */
+
+  showCategoryDetails(category: Category): void {
+    this.selectedCategory = category;
+  }
+
+  closeCategoryDetails(): void {
+    this.selectedCategory = null;
+  }
+
   filterCategories(query: string): void {
     const lowerCaseQuery = query.toLowerCase();
-    this.filteredCategories = this.categories.filter(category =>
+    const filtered = this.categories().filter(category =>
       category.name.toLowerCase().startsWith(lowerCaseQuery)
     );
+    this.filteredCategories.set(filtered);
   }
-  
-  /**
-   * Capitalizes the first letter of every word in a string.
-   * @param val - The string to format.
-   * @returns The formatted string with each word capitalized.
-   */
+
   capitalizeEveryWord(val: string): string {
     return val
       .split(' ')

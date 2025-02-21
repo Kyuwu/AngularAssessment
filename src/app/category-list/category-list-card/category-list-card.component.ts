@@ -1,13 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import Category from '../../models/category';
+import { MatCard, MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-category-list-card',
-  standalone: false,
-  
+  standalone: true,
+  imports: [
+    MatCardModule
+  ],
   templateUrl: './category-list-card.component.html',
   styleUrl: './category-list-card.component.scss'
 })
 export class CategoryListCardComponent {
-  @Input() category!: Category;
+  readonly category = input.required<Category>();
 }

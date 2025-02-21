@@ -1,5 +1,5 @@
 import { Component, computed, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule, MatGridTile } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,14 +16,13 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-films-list',
   standalone: true,
   imports: [
-    CommonModule,
     MatCheckboxModule,
     MatGridListModule,
     MatButtonModule,
     MatIconModule,
     FilmsListCardComponent,
     MatInputModule
-  ],
+],
   templateUrl: './films-list.component.html',
   styleUrls: ['./films-list.component.scss']
 })
@@ -65,9 +64,9 @@ export class FilmsListComponent {
    * Fetches films based on the selected category.
    */
   private loadFilms(): void {
-    console.log("id? "+this.category());
-    if (this.category()) {
-      this.categoryService.getFilmsByCategory(this.category().category_id).subscribe({
+    const category = this.category();
+    if (category) {
+      this.categoryService.getFilmsByCategory(category.category_id).subscribe({
         next: (data) => this.films.set(data),
         error: (err) => console.error('Error fetching films', err),
       });

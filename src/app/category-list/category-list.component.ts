@@ -4,21 +4,18 @@ import Category from '../models/category';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { startWith, Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { FilmsListComponent } from '../films-list/films-list.component';
 import { CategoryListCardComponent } from './category-list-card/category-list-card.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSidenav } from '@angular/material/sidenav';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
   imports: [
-    CommonModule,
     MatSidenavModule,
     ReactiveFormsModule,
     FilmsListComponent,
@@ -27,7 +24,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatIcon,
     MatButtonModule
-  ],
+],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss']
 })

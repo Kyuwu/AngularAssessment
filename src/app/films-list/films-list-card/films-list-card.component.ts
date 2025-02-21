@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import Film from '../../models/film';
 
@@ -7,9 +7,8 @@ import Film from '../../models/film';
   selector: 'app-films-list-card',
   standalone: true,
   imports: [
-    CommonModule,
-    MatCardModule,
-  ],
+    MatCardModule
+],
   templateUrl: './films-list-card.component.html',
   styleUrls: ['./films-list-card.component.scss'] // Fixed typo
 })

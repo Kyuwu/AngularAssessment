@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import Category from '../../models/category';
-import { MatCard, MatCardModule } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-category-list-card',

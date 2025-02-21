@@ -7,29 +7,32 @@
   </mat-form-field>
 
   <div class="category-list-container content-wrapper">
-    <ng-container *ngIf="filteredCategories().length > 0; else empty">
-      <div *ngFor="let category of filteredCategories()" class="category-card">
-        <app-category-list-card
-          [category]="category"
-          (click)="showCategoryDetails(category)">
-        </app-category-list-card>
+    @if (filteredCategories().length > 0) {
+      @for (category of filteredCategories(); track category) {
+        <div class="category-card">
+          <app-category-list-card
+            [category]="category"
+            (click)="showCategoryDetails(category)">
+          </app-category-list-card>
+        </div>
+      }
+    } @else {
+      <div class="content-wrapper">
+        <h3>No categories found...</h3>
       </div>
-    </ng-container>
+    }
   </div>
 
-  <ng-template #empty>
-    <div class="content-wrapper">
-      <h3>No categories found...</h3>
-    </div>
-  </ng-template>
 
-  <div class="category-details-popup" *ngIf="selectedCategory">
-    <button mat-icon-button class="close-popup-button" (click)="closeCategoryDetails()">
+  @if (selectedCategory) {
+    <div class="category-details-popup">
+      <button mat-icon-button class="close-popup-button" (click)="closeCategoryDetails()">
         <mat-icon>close</mat-icon>
-    </button>
+      </button>
       <div class="popup-content">
         <h2>{{ selectedCategory.name }}</h2>
         <app-films-list [category]="selectedCategory"></app-films-list>
       </div>
-  </div>
+    </div>
+  }
 </div>

@@ -9,7 +9,6 @@ import Category from '../models/category';
 import Film from '../models/film';
 import { input } from '@angular/core';
 import { FilmsListCardComponent } from './films-list-card/films-list-card.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -28,11 +27,19 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class FilmsListComponent {
   readonly category = input.required<Category>(); // Selected category of films
-
-  private categoryService = inject(CategoryService);
-  
+  loading = signal(true); // Add a loading signal
   films = signal<Film[]>([]); // All films in the selected category
   selectedRatings = signal<string[]>([]); // Selected ratings for filtering
+
+  private categoryService = inject(CategoryService);
+
+  ngOnInit() {
+    this.loadFilms(); // Load films initially
+  }
+
+  ngOnChanges(): void {
+    this.loadFilms(); // Reload films when category changes
+  }
 
   ratings = computed(() => {
     return Array.from(new Set(this.films().map(film => film.rating))); // Extract unique ratings
@@ -52,24 +59,26 @@ export class FilmsListComponent {
     return `${hours} hours ${minutes} minutes`;
   });
 
-  ngOnInit() {
-    this.loadFilms(); // Load films initially
-  }
-
-  ngOnChanges(): void {
-    this.loadFilms(); // Reload films when category changes
-  }
-
   /**
    * Fetches films based on the selected category.
    */
+
   private loadFilms(): void {
+    this.loading.set(true); // Set loading to true before fetching
     const category = this.category();
     if (category) {
       this.categoryService.getFilmsByCategory(category.category_id).subscribe({
-        next: (data) => this.films.set(data),
-        error: (err) => console.error('Error fetching films', err),
+        next: (data) => {
+          this.films.set(data);
+          this.loading.set(false); // Set loading to false after data is loaded
+        },
+        error: (err) => {
+          console.error('Error fetching films', err);
+          this.loading.set(false); // Important: set loading to false even on error
+        },
       });
+    } else {
+        this.loading.set(false); // handle the case when category is null
     }
   }
 

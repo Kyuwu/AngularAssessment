@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CategoryService } from '../services/category.service';
 import Category from '../models/category';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -35,7 +35,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   searchControl = new FormControl('');
   private destroy$ = new Subject<void>();
 
-  constructor(private categoryService: CategoryService) {}
+  private categoryService = inject(CategoryService);
 
   ngOnInit(): void {
     this.categoryService.getCategories().pipe(takeUntil(this.destroy$)).subscribe({
